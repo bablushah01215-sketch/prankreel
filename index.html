@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Video Loading...</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #000;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    overflow: hidden;
+  }
+
+  /* --- Fake loading screen --- */
+  #loading {
+    color: #fff;
+    text-align: center;
+  }
+  #loading .spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #333;
+    border-top: 5px solid #fff;
+    border-radius: 50%;
+    margin: 0 auto 20px auto;
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  #loading p {
+    font-size: 16px;
+    color: #aaa;
+  }
+
+  /* --- Video container --- */
+  #videoWrap {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: none;
+  }
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #000;
+  }
+
+  /* --- Unmute overlay --- */
+  #unmuteBtn {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.75);
+    color: #fff;
+    border: 2px solid #fff;
+    border-radius: 30px;
+    padding: 12px 24px;
+    font-size: 16px;
+    cursor: pointer;
+    animation: pulse 1.2s infinite;
+    z-index: 10;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: translateX(-50%) scale(1); }
+    50% { transform: translateX(-50%) scale(1.06); }
+  }
+</style>
+</head>
+<body>
+
+  <!-- Fake loading screen shown briefly to build suspense -->
+  <div id="loading">
+    <div class="spinner"></div>
+    <p>Loading video...</p>
+  </div>
+
+  <!-- Real video, hidden until "loading" finishes -->
+  <div id="videoWrap">
+    <video id="prankVideo" playsinline autoplay muted loop>
+      <source src="prank.mp4" type="video/mp4">
+      Your browser doesn't support video.
+    </video>
+    <button id="unmuteBtn">🔊 Tap for sound</button>
+  </div>
+
+<script>
+  // Fake loading delay (feels like a real page loading), then reveal video
+  setTimeout(function () {
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('videoWrap').style.display = 'block';
+    var vid = document.getElementById('prankVideo');
+    vid.play().catch(function () {
+      // If autoplay fails entirely, tapping the button below will start it
+    });
+  }, 1500);
+
+  // Unmute (and start playback if it hadn't started) on tap/click
+  document.getElementById('unmuteBtn').addEventListener('click', function () {
+    var vid = document.getElementById('prankVideo');
+    vid.muted = false;
+    vid.play();
+    this.style.display = 'none';
+  });
+</script>
+
+</body>
+</html>
